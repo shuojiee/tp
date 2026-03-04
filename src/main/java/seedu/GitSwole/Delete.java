@@ -1,4 +1,4 @@
-package seedu.duke;
+package seedu.GitSwole;
 
 public class Delete {
 

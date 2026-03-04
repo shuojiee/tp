@@ -1,8 +1,8 @@
-package seedu.duke;
+package seedu.GitSwole;
 
 import java.util.Scanner;
 
-public class Duke {
+public class GitSwole {
     /**
      * Main entry-point for the GitSwole application.
      */
