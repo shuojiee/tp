@@ -32,7 +32,7 @@ public class HelpCommand extends Command{
 	 */
 	public void printHelpMessage(Ui ui) {
 		int consoleWidth = ui.getDashes();
-		String format = "%-15s | %-45s | %-25s%n";
+		String format = "%-20s | %-60s | %-30s%n";
 
 		// Header
 		System.out.println("=".repeat(consoleWidth));
@@ -51,6 +51,8 @@ public class HelpCommand extends Command{
 		System.out.printf(format, "Delete Workout", "deleteworkout w/WORKOUT", "deleteworkout w/push");
 		System.out.printf(format, "Delete Exercise", "deleteexercise e/EXERCISE w/WORKOUT", "deleteexercise e/benchpress w/push");
 		System.out.printf(format, "List Workouts", "list", "list");
+		System.out.printf(format, "List Exercises 1", "list w/workout", "list w/pull");
+		System.out.printf(format, "List Exercises 2", "list all", "list all");
 		System.out.printf(format, "Find Workout", "findworkout w/WORKOUT", "findworkout w/push");
 		System.out.printf(format, "Find Exercise", "findexercise e/EXERCISE w/WORKOUT", "findexercise e/benchpress w/push");
 		System.out.printf(format, "Help", "help", "help");
