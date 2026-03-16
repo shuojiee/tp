@@ -12,9 +12,11 @@ import seedu.GitSwole.ui.Ui;
  * <p>
  * Supported formats:
  * <ul>
- *   <li>{@code add w/WORKOUT} — creates a new workout session</li>
- *   <li>{@code add e/EXERCISE w/WORKOUT [wt/WEIGHT] [s/SET] [r/REPETITION]} — adds an exercise to a workout</li>
+ *   <li>{@code add /w WORKOUT_NAME} — creates a new workout session</li>
+ *   <li>{@code add /e EXERCISE_NAME /w WORKOUT_NAME [/wt WEIGHT] [/s SETS] [/r REPS]}
+ *       — adds an exercise to an existing workout</li>
  * </ul>
+ * Flag values may contain multiple words. Optional flags default to {@code 0} if omitted.
  */
 public class AddCommand extends Command {
 	private String response;
@@ -29,16 +31,17 @@ public class AddCommand extends Command {
 	}
 
 	/**
-	 * Executes the add command by parsing the user input and either creating a new
-	 * workout or adding an exercise to an existing one.
+	 * Executes the add command by determining whether to add a workout session
+	 * or an exercise, based on the presence of the {@code /e} flag in the input.
 	 *
 	 * @param workouts The current list of workouts.
-	 * @param ui The user interface for displaying results.
-	 * @throws GitSwoleException If required fields such as workout name or exercise details are missing or malformed.
+	 * @param ui       The user interface for displaying results.
+	 * @throws GitSwoleException If required flags are missing, their values are empty,
+	 *                           or the specified workout does not exist.
 	 */
 	@Override
 	public void execute(WorkoutList workouts, Ui ui) throws GitSwoleException {
-		if (response.contains("e/")) {
+		if (response.contains("/e ")) {
 			handleAddExercise(workouts, ui);
 		} else {
 			handleAddWorkout(workouts,ui);
@@ -46,19 +49,23 @@ public class AddCommand extends Command {
 	}
 
 	/**
-	 * Processes the addition of a new workout session to the application.
+	 * Processes the addition of a new workout session.
 	 * <p>
-	 * This method corresponds to Feature 2. It extracts the workout name from the
-	 * command string and adds a new {@link Workout} object to the list.
+	 * Parses the {@code /w} flag to extract the workout name, which may contain
+	 * multiple words (e.g. {@code add /w push day}). Throws an exception if the
+	 * flag is missing or its value is empty.
 	 *
 	 * @param workouts The {@link WorkoutList} to which the new session will be added.
-	 * @param ui The {@link Ui} instance used to display success or error messages.
-	 * @throws GitSwoleException If the workout name (w/) is missing or the value is empty.
+	 * @param ui       The {@link Ui} instance used to display success or error messages.
+	 * @throws GitSwoleException If the {@code /w} flag is absent or has no value.
 	 */
 	private void handleAddWorkout(WorkoutList workouts, Ui ui) throws GitSwoleException {
-		String workoutName = Parser.parseValue(response, "w/");
+		String workoutName = Parser.parseValue(response, "/w");
 		if (workoutName == null || workoutName.isEmpty()) {
-			throw new GitSwoleException(GitSwoleException.ErrorType.INCOMPLETE_COMMAND, "Missing name of workout.");
+			throw new GitSwoleException(
+				GitSwoleException.ErrorType.INCOMPLETE_COMMAND,
+				"Missing name of workout. Usage: add /w WORKOUT_NAME"
+			);
 		}
 
 		workouts.addWorkout(new Workout(workoutName));
@@ -67,23 +74,35 @@ public class AddCommand extends Command {
 	}
 
 	/**
-	 * Processes the addition of a specific exercise to an existing workout session.
+	 * Processes the addition of an exercise to an existing workout session.
 	 * <p>
-	 * This method corresponds to Feature 3. It parses the exercise name, target workout name,
-	 * and optional flags for weight (wt/), sets (s/), and repetitions (r/). If optional flags
-	 * are missing, they default to 0.
+	 * Parses the {@code /e} flag for the exercise name and the {@code /w} flag for
+	 * the target workout name — both may contain multiple words. Optional flags
+	 * {@code /wt}, {@code /s}, and {@code /r} specify weight, sets, and repetitions
+	 * respectively, and default to {@code 0} if omitted.
+	 * <p>
+	 * Example: {@code add /e bench press /w push day /wt 40 /s 3 /r 8}
 	 *
 	 * @param workouts The {@link WorkoutList} used to locate the target workout session.
-	 * @param ui The {@link Ui} instance used to display success or error messages.
-	 * @throws GitSwoleException If the exercise name (e/) or workout name (w/) is missing,
-	 *                           or if the specified workout cannot be found in the list.
+	 * @param ui       The {@link Ui} instance used to display success or error messages.
+	 * @throws GitSwoleException If the {@code /e} or {@code /w} flag is missing or empty,
+	 *                           or if the specified workout does not exist in the list.
 	 */
 	private void handleAddExercise(WorkoutList workouts, Ui ui) throws GitSwoleException {
-		String exerciseName = Parser.parseValue(response, "e/");
-		String workoutName = Parser.parseValue(response, "w/");
+		String exerciseName = Parser.parseValue(response, "/e");
+		String workoutName = Parser.parseValue(response, "/w");
 
-		if (exerciseName == null || workoutName == null) {
-			throw new GitSwoleException(GitSwoleException.ErrorType.INCOMPLETE_COMMAND, "Missing name of workout / exercise");
+		if (exerciseName == null || exerciseName.isEmpty()) {
+			throw new GitSwoleException(
+					GitSwoleException.ErrorType.INCOMPLETE_COMMAND,
+					"Missing name of exercise. Usage: add /e EXERCISE_NAME /w WORKOUT_NAME"
+			);
+		}
+		if (workoutName == null || workoutName.isEmpty()) {
+			throw new GitSwoleException(
+					GitSwoleException.ErrorType.INCOMPLETE_COMMAND,
+					"Missing name of workout. Usage: add /e EXERCISE_NAME /w WORKOUT_NAME"
+			);
 		}
 
 		Workout targetWorkout = workouts.getWorkoutByName(workoutName);
@@ -91,9 +110,9 @@ public class AddCommand extends Command {
 			throw new GitSwoleException(GitSwoleException.ErrorType.IDX_OUTOFBOUNDS, workoutName);
 		}
 
-		int weight = Parser.parseOptionalInt(response, "wt/", 0);
-		int sets = Parser.parseOptionalInt(response, "s/", 0);
-		int reps = Parser.parseOptionalInt(response, "r/", 0);
+		int weight = Parser.parseOptionalInt(response, "/wt", 0);
+		int sets = Parser.parseOptionalInt(response, "/s", 0);
+		int reps = Parser.parseOptionalInt(response, "/r", 0);
 
 		targetWorkout.addExercise(new Exercise(exerciseName, weight, sets, reps));
 		ui.showMessage("Your exercise has been successfully added! Looking swole g");

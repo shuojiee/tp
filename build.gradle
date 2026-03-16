@@ -29,12 +29,15 @@ test {
 }
 
 application {
-    mainClass.set("seedu.duke.Duke")
+    mainClass.set("seedu.GitSwole.GitSwole")
 }
 
 shadowJar {
-    archiveBaseName.set("duke")
-    archiveClassifier.set("")
+    manifest {
+        attributes(
+            'Main-Class': 'seedu.GitSwole.GitSwole'
+        )
+    }
 }
 
 checkstyle {

@@ -93,37 +93,76 @@ public class Parser {
 	}
 
 	/**
-	 * Helper method to extract a string value following a specific prefix.
+	 * Extracts the value associated with a flag in the user's input string.
+	 * <p>
+	 * Flags follow the format {@code /flagName value}, where the value spans
+	 * from after the flag to the next flag (indicated by {@code " /"}) or the
+	 * end of the input string. Values may contain multiple words.
+	 * <p>
+	 * Examples:
+	 * <ul>
+	 *   <li>{@code parseValue("add /w push day", "/w")} returns {@code "push day"}</li>
+	 *   <li>{@code parseValue("add /e bench press /w push", "/e")} returns {@code "bench press"}</li>
+	 *   <li>{@code parseValue("add /w push", "/e")} returns {@code null}</li>
+	 * </ul>
 	 *
-	 * @param input The full command string.
-	 * @param prefix The prefix to look for (e.g., "w/").
-	 * @return The value associated with the prefix, or null if prefix not found.
+	 * @param input  The full command string entered by the user.
+	 * @param prefix The flag to search for (e.g. {@code "/w"}, {@code "/e"}, {@code "/wt"}).
+	 * @return The trimmed value following the flag, or {@code null} if the flag is absent or has no value.
 	 */
 	 public static String parseValue(String input, String prefix) {
-		 if (!input.contains(prefix)) {
-			 return null;
+		 String searchToken = prefix + " ";
+		 int start = -1;
+
+		 if (input.startsWith(searchToken)) {
+			 start = searchToken.length();
+		 } else {
+			 int index = input.indexOf(" " + searchToken);
+
+			 if (index == -1) {
+				 return null;
+			 }
+
+			 start = index + 1 + searchToken.length();
 		 }
 
-		 int start = input.indexOf(prefix) + prefix.length();
-		 int end = input.indexOf(" ", start);
+		 int end = input.indexOf(" /", start);
 		 if (end == -1) {
 			 end = input.length();
 		 }
-		 return input.substring(start, end).trim();
+
+		 String value = input.substring(start, end).trim();
+		 return value.isEmpty() ? null : value;
 	 }
 
 	/**
-	 * Helper method to parse an integer following a prefix, returning a default if missing.
+	 * Extracts an integer value associated with a flag in the user's input string,
+	 * returning a default value if the flag is absent or its value is not a valid integer.
+	 * <p>
+	 * Delegates to {@link #parseValue(String, String)} to locate the flag value,
+	 * then attempts to parse it as an integer.
+	 * <p>
+	 * Examples:
+	 * <ul>
+	 *   <li>{@code parseOptionalInt("add /e bench /w push /wt 40", "/wt", 0)} returns {@code 40}</li>
+	 *   <li>{@code parseOptionalInt("add /e bench /w push", "/wt", 0)} returns {@code 0}</li>
+	 *   <li>{@code parseOptionalInt("add /e bench /w push /wt heavy", "/wt", 0)} returns {@code 0}</li>
+	 * </ul>
 	 *
-	 * @param input The full command string.
-	 * @param prefix The prefix to look for (e.g., "wt/").
-	 * @param defaultValue The value to return if parsing fails or prefix is missing.
-	 * @return The parsed integer or default value.
+	 * @param input        The full command string entered by the user.
+	 * @param prefix       The flag to search for (e.g. {@code "/wt"}, {@code "/s"}, {@code "/r"}).
+	 * @param defaultValue The value to return if the flag is missing or its value cannot be parsed as an integer.
+	 * @return The parsed integer value, or {@code defaultValue} if parsing fails or the flag is absent.
 	 */
 	 public static int parseOptionalInt(String input, String prefix, int defaultValue) {
 		 String value = parseValue(input, prefix);
+
+		 if (value == null) {
+			 return defaultValue;
+		 }
+
 		 try {
-			 return (value != null) ? Integer.parseInt(value) : defaultValue;
+			 return Integer.parseInt(value.trim());
 		 } catch (NumberFormatException e) {
 		 	return defaultValue;
 		 }
