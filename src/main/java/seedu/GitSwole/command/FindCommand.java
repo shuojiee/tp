@@ -7,6 +7,7 @@ import seedu.GitSwole.exceptions.GitSwoleException;
 import seedu.GitSwole.parser.Parser;
 import seedu.GitSwole.ui.Ui;
 
+import java.util.logging.Level;
 /**
  * Represents a command that searches for a workout or an exercise by keyword.
  * <p>
@@ -38,6 +39,7 @@ public class FindCommand extends Command {
      */
     @Override
     public void execute(WorkoutList workouts, Ui ui) throws GitSwoleException {
+        logger.log(Level.INFO, "Executing FindCommand with arguments: {0}", arguments);
         if (arguments.contains("e/")) {
             handleFindExercise(workouts, ui);
         } else {
@@ -56,6 +58,7 @@ public class FindCommand extends Command {
     private void handleFindWorkout(WorkoutList workouts, Ui ui) throws GitSwoleException {
         String keyword = Parser.parseValue(arguments, "w/");
         if (keyword == null || keyword.isEmpty()) {
+            logger.log(Level.WARNING, "FindWorkout failed: Missing 'w/' keyword.");
             throw new GitSwoleException(GitSwoleException.ErrorType.INCOMPLETE_COMMAND, "findworkout w/WORKOUT");
         }
 
@@ -69,7 +72,8 @@ public class FindCommand extends Command {
             }
         }
         if (!found) {
-            ui.showMessage("Workout Not Found");
+            logger.log(Level.INFO, "No workout matches found for keyword: {0}", keyword);
+            ui.showMessage("Workout Not Found :(");
         }
         ui.showLine();
     }
@@ -91,12 +95,14 @@ public class FindCommand extends Command {
 
         if (exerciseKeyword == null || exerciseKeyword.isEmpty()
                 || workoutName == null || workoutName.isEmpty()) {
+            logger.log(Level.WARNING, "FindExercise failed: Missing e/ or w/ flag.");
             throw new GitSwoleException(GitSwoleException.ErrorType.INCOMPLETE_COMMAND,
                     "findexercise e/EXERCISE w/WORKOUT");
         }
 
         Workout targetWorkout = workouts.getWorkoutByName(workoutName);
         if (targetWorkout == null) {
+            logger.log(Level.INFO, "Search aborted: Workout '{0}' does not exist.", workoutName);
             throw new GitSwoleException(GitSwoleException.ErrorType.IDX_OUTOFBOUNDS, workoutName);
         }
 
@@ -112,7 +118,9 @@ public class FindCommand extends Command {
             }
         }
         if (!found) {
-            ui.showMessage("Exercise Not Found");
+            logger.log(Level.INFO, "No exercise matches found for '{0}' in '{1}'",
+                    new Object[]{exerciseKeyword, workoutName});
+            ui.showMessage("Exercise Not Found :(");
         }
         ui.showLine();
     }

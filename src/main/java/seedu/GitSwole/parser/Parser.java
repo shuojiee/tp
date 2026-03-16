@@ -7,11 +7,13 @@ import seedu.GitSwole.ui.Ui;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  * Parses raw user input and maps it to the appropriate {@link Command} object.
  */
 public class Parser {
+	private static final Logger logger = Logger.getLogger(Parser.class.getName());
 	enum CommandType {
 		ADD, DELETE, EXIT, HELP, LIST, FIND, MARK
 	}
@@ -45,17 +47,23 @@ public class Parser {
 	 */
 	public Command readResponse(String response, WorkoutList workouts) throws GitSwoleException {
 		String[] words = response.split(" ");
+		if (words.length == 0 || words[0].isEmpty()) {
+			logger.log(Level.WARNING, "Empty input received.");
+			throw new GitSwoleException(GitSwoleException.ErrorType.INCOMPLETE_COMMAND, "command");
+		}
 		String command = words[0];
 		CommandType cmdType = parseCommand(command);
 
 		switch (cmdType) {
 		case ADD:
 			if (words.length < 2) {
+				logger.log(Level.WARNING, "Add command missing arguments.");
 				throw new GitSwoleException(GitSwoleException.ErrorType.INCOMPLETE_COMMAND, command);
 			}
 			return new AddCommand(response);
 		case DELETE:
 			if (words.length < 2) {
+				logger.log(Level.WARNING, "Delete command missing index.");
 				throw new GitSwoleException(GitSwoleException.ErrorType.INCOMPLETE_COMMAND, command);
 			}
 			return new DeleteCommand(response);
@@ -66,6 +74,7 @@ public class Parser {
 			return new MarkCommand(response);
 		case FIND:
 			if (words.length < 2) {
+				logger.log(Level.WARNING, "Find command missing keyword.");
 				throw new GitSwoleException(GitSwoleException.ErrorType.INCOMPLETE_COMMAND, command);
 			}
 			return new FindCommand(response);
@@ -171,7 +180,9 @@ public class Parser {
 		 try {
 			 return Integer.parseInt(value.trim());
 		 } catch (NumberFormatException e) {
-		 	return defaultValue;
+			 logger.log(Level.WARNING, "Invalid integer format for prefix {0}: {1}. Using default: {2}",
+					 new Object[]{prefix, value, defaultValue});
+		 	 return defaultValue;
 		 }
 	 }
 }

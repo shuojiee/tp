@@ -4,11 +4,14 @@ import seedu.GitSwole.assets.WorkoutList;
 import seedu.GitSwole.exceptions.GitSwoleException;
 import seedu.GitSwole.ui.Ui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  * Represents an abstract command that can be executed within the GitSwole application.
  * All concrete command types must extend this class and implement {@link #execute}.
  */
 public abstract class Command {
+	protected static final Logger logger = Logger.getLogger(Command.class.getName());
 	protected boolean isExit = false;
 
 	/**

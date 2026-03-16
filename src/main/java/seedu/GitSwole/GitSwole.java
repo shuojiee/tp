@@ -6,11 +6,15 @@ import seedu.GitSwole.exceptions.GitSwoleException;
 import seedu.GitSwole.parser.Parser;
 import seedu.GitSwole.ui.Ui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Main class for the GitSwole application.
  * Initializes core components and manages the main application loop.
  */
 public class GitSwole {
+    private static final Logger logger = Logger.getLogger(GitSwole.class.getName());
     private static Ui ui;
     private static WorkoutList workouts = new WorkoutList();
 
@@ -34,6 +38,7 @@ public class GitSwole {
                 c.execute(workouts, ui);
                 isExit = c.isExit();
             } catch (GitSwoleException e) {
+                logger.log(Level.WARNING, "GitSwoleException occurred: " + e.getMessage());
                 ui.showError(e.getMessage());
             }
         }
@@ -44,7 +49,9 @@ public class GitSwole {
      * @param args Command-line arguments (not used).
      */
     public static void main(String[] args) {
+        logger.log(Level.INFO, "GitSwole application starting...");
         new GitSwole();
         run();
+        logger.log(Level.INFO, "GitSwole application terminated.");
     }
 }

@@ -7,6 +7,7 @@ import seedu.GitSwole.exceptions.GitSwoleException;
 import seedu.GitSwole.parser.Parser;
 import seedu.GitSwole.ui.Ui;
 
+import java.util.logging.Level;
 /**
  * Represents a command that adds a new workout or exercise to the workout list.
  * <p>
@@ -62,6 +63,7 @@ public class AddCommand extends Command {
 	private void handleAddWorkout(WorkoutList workouts, Ui ui) throws GitSwoleException {
 		String workoutName = Parser.parseValue(response, "/w");
 		if (workoutName == null || workoutName.isEmpty()) {
+			logger.log(Level.WARNING, "AddWorkout failed: Missing '/w' flag or value.");
 			throw new GitSwoleException(
 				GitSwoleException.ErrorType.INCOMPLETE_COMMAND,
 				"Missing name of workout. Usage: add /w WORKOUT_NAME"
@@ -93,12 +95,16 @@ public class AddCommand extends Command {
 		String workoutName = Parser.parseValue(response, "/w");
 
 		if (exerciseName == null || exerciseName.isEmpty()) {
+			logger.log(Level.WARNING, "AddExercise failed: Incomplete required flags. e: {0}, w: {1}",
+					new Object[]{exerciseName, workoutName});
 			throw new GitSwoleException(
 					GitSwoleException.ErrorType.INCOMPLETE_COMMAND,
 					"Missing name of exercise. Usage: add /e EXERCISE_NAME /w WORKOUT_NAME"
 			);
 		}
 		if (workoutName == null || workoutName.isEmpty()) {
+			logger.log(Level.WARNING, "AddExercise failed: Incomplete required flags. e: {0}, w: {1}",
+					new Object[]{exerciseName, workoutName});
 			throw new GitSwoleException(
 					GitSwoleException.ErrorType.INCOMPLETE_COMMAND,
 					"Missing name of workout. Usage: add /e EXERCISE_NAME /w WORKOUT_NAME"
@@ -107,6 +113,7 @@ public class AddCommand extends Command {
 
 		Workout targetWorkout = workouts.getWorkoutByName(workoutName);
 		if (targetWorkout == null) {
+			logger.log(Level.WARNING, "AddExercise failed: Target workout '{0}' not found.", workoutName);
 			throw new GitSwoleException(GitSwoleException.ErrorType.IDX_OUTOFBOUNDS, workoutName);
 		}
 

@@ -4,6 +4,7 @@ import seedu.GitSwole.assets.WorkoutList;
 import seedu.GitSwole.exceptions.GitSwoleException;
 import seedu.GitSwole.ui.Ui;
 
+import java.util.logging.Level;
 /**
  * Represents a command that deletes a workout or an exercise from the workout list.
  * <p>
@@ -45,6 +46,7 @@ public class DeleteCommand extends Command {
         }
         // Handle invalid formats
         else {
+            logger.log(Level.WARNING, "Invalid delete format received: {0}", arguments);
             System.out.println("Invalid delete format!");
             System.out.println("Use: delete w/WORKOUT  OR  delete e/EXERCISE w/WORKOUT");
         }
@@ -62,6 +64,7 @@ public class DeleteCommand extends Command {
         String workoutName = arguments.substring(wIndex + 2).trim();
 
         if (workoutName.isEmpty()) {
+            logger.log(Level.WARNING, "DeleteWorkout failed: Workout name is empty.");
             System.out.println("Please specify the workout name. Example: delete w/push");
             return;
         }
@@ -86,6 +89,7 @@ public class DeleteCommand extends Command {
 
         // Ensure both prefixes exist and "e/" comes before "w/"
         if (eIndex == -1 || wIndex == -1 || eIndex > wIndex) {
+            logger.log(Level.WARNING, "DeleteExercise failed: Invalid flag order or missing flags.");
             System.out.println("Invalid format! Please use: delete e/EXERCISE w/WORKOUT");
             return;
         }
@@ -98,6 +102,8 @@ public class DeleteCommand extends Command {
         String workoutName = remainingArgs.split(" ")[0];
 
         if (exerciseName.isEmpty() || workoutName.isEmpty()) {
+            logger.log(Level.WARNING, "DeleteExercise failed: Empty exercise ({0}) or workout ({1}) name.",
+                    new Object[]{exerciseName, workoutName});
             System.out.println("Exercise or Workout name cannot be empty.");
             return;
         }
