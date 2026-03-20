@@ -231,7 +231,8 @@ public class Storage {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
             throw new StorageException(
-                    "Line " + lineNumber + ": Cannot parse \"" + value + "\" as integer for field \"" + fieldName + "\".");
+                    "Line " + lineNumber + ": Cannot parse \""
+                    + value + "\" as integer for field \"" + fieldName + "\".");
         }
     }
 
@@ -240,8 +241,12 @@ public class Storage {
      * (case-insensitive). Throws a {@link StorageException} for any other value.
      */
     private boolean parseBoolean(String value, int lineNumber) throws StorageException {
-        if (value.equalsIgnoreCase("true"))  return true;
-        if (value.equalsIgnoreCase("false")) return false;
+        if (value.equalsIgnoreCase("true")){
+            return true;
+        }
+        if (value.equalsIgnoreCase("false")){
+            return false;
+        }
         throw new StorageException(
                 "Line " + lineNumber + ": Cannot parse \"" + value + "\" as boolean for isDone field.");
     }
