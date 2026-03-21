@@ -134,6 +134,20 @@ class HelpCommandTest {
     }
 
     @Test
+    @DisplayName("Output contains edit workout format")
+    void output_containsEditWorkoutFormat() throws GitSwoleException {
+        new HelpCommand().execute(workouts, ui);
+        assertTrue(outContent.toString().contains("edit w/WORKOUT_NAME"));
+    }
+
+    @Test
+    @DisplayName("Output contains edit exercise format")
+    void output_containsEditExerciseFormat() throws GitSwoleException {
+        new HelpCommand().execute(workouts, ui);
+        assertTrue(outContent.toString().contains("edit w/WORKOUT_NAME e/EXERCISE_NAME"));
+    }
+
+    @Test
     @DisplayName("Output contains help and exit commands")
     void output_containsHelpAndExit() throws GitSwoleException {
         new HelpCommand().execute(workouts, ui);
