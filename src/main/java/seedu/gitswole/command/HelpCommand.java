@@ -53,6 +53,8 @@ public class HelpCommand extends Command {
             {"", "    [wt/WEIGHT] [s/SETS] [r/REPS]", "    wt/40 s/3 r/8"},
             {"Delete Workout", "delete w/WORKOUT", "delete w/push"},
             {"Delete Exercise", "delete e/EXERCISE w/WORKOUT", "delete e/benchpress w/push"},
+            {"Edit Workout", "edit w/WORKOUT_NAME", "edit w/push"},
+            {"Edit Exercise", "edit w/WORKOUT_NAME e/EXERCISE_NAME", "edit w/push e/benchpress"},
             {"List Workouts", "list", "list"},
             {"List Exercises", "list w/WORKOUT", "list w/pull"},
             {"List ALL Exercises", "list all", "list all"},
