@@ -110,7 +110,8 @@ public class Ui {
     public void printWorkouts(ArrayList<Workout> workoutList) {
         showMessage("=== COMPLETE WORKOUT LOG ===");
         for (Workout workout : workoutList) {
-            showMessage("[" + workout.getWorkoutName().toUpperCase() + "]");
+            String status = workout.isDone() ? "[X]" : "[ ]";
+            showMessage(status + "[" + workout.getWorkoutName().toUpperCase() + "]");
             printExercises(workout.getExerciseList());
             showMessage(""); //Add a new line between workouts
         }
@@ -141,7 +142,8 @@ public class Ui {
      * @param workout The {@link Workout} to display.
      */
     public void printWorkout(Workout workout) {
-        showMessage("[" + workout.getWorkoutName().toUpperCase() + "]");
+        String status = workout.isDone() ? "[X]" : "[ ]";
+        showMessage(status + "[" + workout.getWorkoutName().toUpperCase() + "]");
         printExercises(workout.getExerciseList());
         showLine();
     }

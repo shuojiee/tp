@@ -1,6 +1,6 @@
 WORKOUT | pull | false
 ---
-WORKOUT | legs | false
+WORKOUT | legs | true
 EXERCISE | legpress | 0 | 0 | 0
 ---
 WORKOUT | push | false

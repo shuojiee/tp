@@ -62,6 +62,8 @@ public class HelpCommand extends Command {
             {"Log Performance", "log e/EXERCISE w/WORKOUT wt/W s/S r/R", "log e/bench w/push wt/60 s/3 r/8"},
             {"Find Workout", "find w/WORKOUT", "find w/push"},
             {"Find Exercise", "find e/EXERCISE w/WORKOUT", "find e/benchpress w/push"},
+            {"Mark Workout" , "mark w/WORKOUT_NAME", "mark w/push"},
+            {"Unmark Workout", "unmark w/WORKOUT_NAME", "unmark w/push"},
             {"Help", "help", "help"},
             {"Exit", "exit", "exit"}
         };

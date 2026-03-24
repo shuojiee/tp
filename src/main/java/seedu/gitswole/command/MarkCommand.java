@@ -3,14 +3,17 @@ package seedu.gitswole.command;
 import seedu.gitswole.assets.Workout;
 import seedu.gitswole.assets.WorkoutList;
 import seedu.gitswole.exceptions.GitSwoleException;
+import seedu.gitswole.parser.Parser;
 import seedu.gitswole.ui.Ui;
+import java.util.logging.Level;
 
 /**
  * Represents a command that marks a workout session as completed.
  * <p>
  * Supported format:
  * <ul>
- *   <li>{@code mark WORKOUT_NAME} — marks the named workout as completed</li>
+ *   <li>{@code mark w/WORKOUT_NAME} — marks the named workout as completed</li>
+ *   <li>{@code unmark w/WORKOUT_NAME} — unmarks the named workout</li>
  * </ul>
  * The workout name may contain multiple words (e.g. {@code mark push day}).
  */
@@ -42,16 +45,31 @@ public class MarkCommand extends Command {
      */
     @Override
     public void execute(WorkoutList workouts, Ui ui) throws GitSwoleException {
+        assert workouts != null : "WorkoutList must not be null";
+        assert ui != null : "Ui must not be null";
+
         String[] parts = response.split(" ");
+        assert parts.length > 0 : "Response must contain at least one word";
+        assert parts[0].equalsIgnoreCase("mark") || parts[0].equalsIgnoreCase("unmark")
+                : "First word must be mark or unmark";
+
         boolean isDone = parts[0].equalsIgnoreCase("mark");
-        String workoutName = response.substring(parts[0].length()).trim();
+        String workoutName = Parser.parseValue(response, "w/");
 
-        Workout target = workouts.getWorkoutByName(workoutName);
-        if (target == null) {
-            throw new GitSwoleException(GitSwoleException.ErrorType.IDX_OUTOFBOUNDS, workoutName);
+        if (workoutName == null || workoutName.isEmpty()) {
+            LOGGER.log(Level.WARNING, "Command missing w/ flag or workout name");
+            throw new GitSwoleException(GitSwoleException.ErrorType.INCOMPLETE_COMMAND, parts[0]);
         }
+        Workout target = workouts.getWorkoutByName(workoutName);
 
+        if (target == null) {
+            LOGGER.log(Level.WARNING, "Workout ''{0}'' not found.", workoutName);
+            throw new GitSwoleException(GitSwoleException.ErrorType.NOT_FOUND, workoutName);
+        }
         target.markDone(isDone);
+
+        LOGGER.log(Level.INFO, "Workout ''{0}'' marked as {1}",
+                new Object[]{workoutName, isDone ? "done" : "not done"});
 
         if (isDone) {
             ui.showMessage("[X] " + target.getWorkoutName());

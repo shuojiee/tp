@@ -70,7 +70,9 @@ public class ListCommand extends Command {
 
         ui.showMessage("Your Workouts:");
         for (int i = 0; i < workoutList.size(); i++) {
-            ui.showMessage((i + 1) + ". " + workoutList.get(i).getWorkoutName());
+            Workout w = workoutList.get(i);
+            String status = w.isDone() ? "[X]" : "[ ]";
+            ui.showMessage((i + 1) + ". " + status + w.getWorkoutName());
         }
         ui.showLine();
     }
@@ -94,7 +96,9 @@ public class ListCommand extends Command {
         if (workout == null) {
             throw new GitSwoleException(GitSwoleException.ErrorType.IDX_OUTOFBOUNDS, workoutName);
         }
-        ui.showMessage(workout.getWorkoutName().toUpperCase() + " Workout Exercises:");
+
+        String status = workout.isDone() ? "[X]" : "[ ]";
+        ui.showMessage(status + workout.getWorkoutName().toUpperCase() + " Workout Exercises:");
         ui.printExercises(workout.getExerciseList());
         ui.showLine();
     }
