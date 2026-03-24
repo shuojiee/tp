@@ -4,6 +4,9 @@ import seedu.gitswole.assets.Workout;
 import seedu.gitswole.assets.WorkoutList;
 import seedu.gitswole.exceptions.GitSwoleException;
 import seedu.gitswole.ui.Ui;
+import seedu.gitswole.parser.Parser;
+
+import java.util.logging.Level;
 
 /**
  * Represents a command that marks a workout session as completed.
@@ -42,16 +45,32 @@ public class MarkCommand extends Command {
      */
     @Override
     public void execute(WorkoutList workouts, Ui ui) throws GitSwoleException {
+        assert workouts != null : "WorkoutList must not be null";
+        assert ui != null : "Ui must not be null";
+
         String[] parts = response.split(" ");
+        assert parts.length > 0 : "Response must contain at least one word";
+        assert parts[0].equalsIgnoreCase("mark") || parts[0].equalsIgnoreCase("unmark")
+                : "First word must be mark or unmark";
+
         boolean isDone = parts[0].equalsIgnoreCase("mark");
-        String workoutName = response.substring(parts[0].length()).trim();
+        String workoutName = Parser.parseValue(response, "w/");
+
+        if (workoutName == null || workoutName.isEmpty()) {
+            LOGGER.log(Level.WARNING, "Mark/Unmark command missing w/ flag or workout name.");
+            throw new GitSwoleException(GitSwoleException.ErrorType.INCOMPLETE_COMMAND, parts[0]);
+        }
 
         Workout target = workouts.getWorkoutByName(workoutName);
         if (target == null) {
-            throw new GitSwoleException(GitSwoleException.ErrorType.IDX_OUTOFBOUNDS, workoutName);
+            LOGGER.log(Level.WARNING, "Workout ''{0}'' not found.", workoutName);
+            throw new GitSwoleException(GitSwoleException.ErrorType.NOT_FOUND, workoutName);
         }
+        assert target != null : "Target workout must not be null after null check";
 
         target.markDone(isDone);
+        LOGGER.log(Level.INFO, "Workout ''{0}'' marked as {1}",
+                new Object[]{workoutName, isDone ? "done" : "not done"});
 
         if (isDone) {
             ui.showMessage("[X] " + target.getWorkoutName());
