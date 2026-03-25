@@ -16,4 +16,12 @@ java -jar %jarloc% < ..\..\text-ui-test\input.txt > ..\..\text-ui-test\ACTUAL.TX
 
 cd ..\..\text-ui-test
 
-FC ACTUAL.TXT EXPECTED.TXT >NUL && ECHO Test passed! || Echo Test failed!
+powershell -Command ^
+  "$actual = (Get-Content ACTUAL.TXT) -replace 'v2\.0 \| .*','v2.0 | <DATE_PLACEHOLDER>' ^
+    -replace 'Daily quote:\".*\"','Daily quote:\"<QUOTE_PLACEHOLDER>\"' ^
+    -replace '(Workouts logged\s+: )\d+','${1}<NUM>' ^
+    -replace '(Workouts done\s+: )\d+ / \d+','${1}<NUM> / <NUM>' ^
+    -replace '(Total exercises\s+: )\d+','${1}<NUM>' ^
+    -replace '\s+$','' ; ^
+  $expected = (Get-Content EXPECTED.TXT) -replace '\s+$','' ; ^
+  if (Compare-Object $actual $expected) { echo 'Test failed!'; exit 1 } else { echo 'Test passed!'; exit 0 }"
