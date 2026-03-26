@@ -9,6 +9,7 @@ import seedu.gitswole.ui.Ui;
 
 import java.util.logging.Level;
 
+//@@author vet3whale
 /**
  * Represents a command that edits an existing workout or exercise in the workout list.
  * <p>
@@ -282,3 +283,4 @@ public class EditCommand extends Command{
         }
     }
 }
+//@@author

@@ -4,6 +4,7 @@ import seedu.gitswole.assets.WorkoutList;
 import seedu.gitswole.exceptions.GitSwoleException;
 import seedu.gitswole.ui.Ui;
 
+//@@author vet3whale
 /**
  * Represents a command that displays a summary of all available GitSwole commands.
  */
@@ -80,3 +81,4 @@ public class HelpCommand extends Command {
         ui.showMessage("For the full user guide, visit: https://xxxxxxxxx.com");
     }
 }
+//@@author

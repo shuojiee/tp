@@ -13,7 +13,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+//@@author vet3whale
 @DisplayName("Ui")
 class UiTest {
 
@@ -93,3 +93,4 @@ class UiTest {
         assertTrue(underscoreLineCount >= 2);
     }
 }
+//@@author

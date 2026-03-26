@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+//@@author vet3whale
 @DisplayName("ExitCommand")
 class ExitCommandTest {
 
@@ -62,3 +63,4 @@ class ExitCommandTest {
         assertTrue(cmd.isExit());
     }
 }
+//@@author

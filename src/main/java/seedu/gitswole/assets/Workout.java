@@ -2,6 +2,7 @@ package seedu.gitswole.assets;
 
 import java.util.ArrayList;
 
+//@@author vet3whale
 /**
  * Represents a single workout session containing a name and a list of exercises.
  */
@@ -120,3 +121,4 @@ public class Workout {
         return null;
     }
 }
+//@@author

@@ -1,5 +1,6 @@
 package seedu.gitswole.exceptions;
 
+//@@author vet3whale
 /**
  * Represents a custom exception for errors encountered during GitSwole command execution.
  * Each exception carries an {@link ErrorType} and the command string that caused it,
@@ -20,8 +21,6 @@ public class GitSwoleException extends Exception {
 
     private ErrorType type;
     private String command;
-
-    //private Ui ui = new Ui();
 
     /**
      * Constructs a GitSwoleException with the specified error type and associated command.
@@ -77,3 +76,4 @@ public class GitSwoleException extends Exception {
         return command;
     }
 }
+//@@author

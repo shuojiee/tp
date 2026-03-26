@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+//@@author vet3whale
 @DisplayName("Exercise")
 class ExerciseTest {
 
@@ -42,3 +42,4 @@ class ExerciseTest {
         assertEquals(0, e.getReps());
     }
 }
+//@@author

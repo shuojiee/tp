@@ -4,6 +4,7 @@ package seedu.gitswole.assets;
  * Represents a single exercise entry within a workout, including its name,
  * weight, sets, and repetitions.
  */
+//@@author vet3whale
 public class Exercise {
     private String exerciseName;
     private int weight;
@@ -87,3 +88,5 @@ public class Exercise {
         this.reps = reps;
     }
 }
+
+//@@author

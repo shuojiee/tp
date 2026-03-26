@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
+//@@author vet3whale
 @DisplayName("Parser")
 class ParserTest {
 
@@ -150,3 +150,4 @@ class ParserTest {
         assertEquals(GitSwoleException.ErrorType.INCOMPLETE_COMMAND, ex.getType());
     }
 }
+//@@author

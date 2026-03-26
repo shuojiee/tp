@@ -4,6 +4,7 @@ import seedu.gitswole.assets.WorkoutList;
 import seedu.gitswole.exceptions.GitSwoleException;
 import seedu.gitswole.ui.Ui;
 
+//@@author vet3whale
 /**
  * Represents a command that terminates the GitSwole application.
  * Sets the exit flag to {@code true}, signalling the main loop to stop.
@@ -28,3 +29,4 @@ public class ExitCommand extends Command {
     }
 
 }
+//@@author

@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+//@@author vet3whale
 @DisplayName("WorkoutList")
 class WorkoutListTest {
 
@@ -90,3 +91,4 @@ class WorkoutListTest {
         assertFalse(workoutList.removeExercise("nonexistent", "bench press"));
     }
 }
+//@@author

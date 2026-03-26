@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+//@@author vet3whale
 @DisplayName("EditCommand")
 class EditCommandTest {
 
@@ -196,3 +196,4 @@ class EditCommandTest {
         assertEquals(12, e.getReps());
     }
 }
+//@@author

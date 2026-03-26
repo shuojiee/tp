@@ -2,6 +2,7 @@ package seedu.gitswole.assets;
 
 import java.util.ArrayList;
 
+//@@author vet3whale
 /**
  * Manages the collection of {@link Workout} objects for the GitSwole application.
  * Provides methods to add, retrieve, and query workouts.
@@ -128,3 +129,4 @@ public class WorkoutList {
         return count;
     }
 }
+//@@author
