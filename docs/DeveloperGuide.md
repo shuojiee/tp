@@ -8,6 +8,11 @@
 
 {Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
 
+## Setup Guide
+### Steps
+1. {Step one e.g., Clone the repository: git clone https://github.com/your-repo}
+2. {Step two e.g., Install dependencies}
+3. {Step three e.g., Run the application}
 
 ## Product scope
 ### Target user profile
@@ -26,7 +31,10 @@
 |v2.0|user|find a to-do item by name|locate a to-do without having to go through the entire list|
 
 ## Non-Functional Requirements
-
+Performance:
+Security:
+Maintainability:
+Portability:
 {Give non-functional requirements}
 
 ## Glossary
