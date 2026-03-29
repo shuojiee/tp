@@ -13,16 +13,20 @@ GitSwole provides fast, CLI-based workout tracking for gym-goers who dislike slo
     - [Feature 3: Add an Exercise](#feature-3-add-an-exercise)
     - [Feature 4: Delete Workout Session](#feature-4-delete-workout-session)
     - [Feature 5: Delete an Exercise](#feature-5-delete-an-exercise)
-    - [Feature 6: List Workout Sessions](#feature-6-list-workout-sessions)
+    - [Feature 6: List Workout Summary](#feature-6-list-workout-summary)
     - [Feature 7: List Workout Exercises](#feature-7-list-workout-exercises)
-    - [Feature 8: Find a Workout](#feature-8-find-a-workout)
-    - [Feature 9: Find an Exercise](#feature-9-find-an-exercise)
-    - [Feature 10: Exit](#feature-10-exit)
-    - [Feature 11: Mark](#feature-11-mark)
-    - [Feature 12: Storage](#feature-12-storage)
-    - [Feature 13: Date](#feature-13-date)
-    - [Feature 14: Edit](#feature-14-edit)
-    - [Feature 15: Remarks](#feature-15-remarks)
+    - [Feature 8: List All Data](#feature-8-list-all-data)
+    - [Feature 9: Find a Workout](#feature-9-find-a-workout)
+    - [Feature 10: Find an Exercise](#feature-10-find-an-exercise)
+    - [Feature 11: Exit](#feature-11-exit)
+    - [Feature 12: Mark](#feature-12-mark)
+    - [Feature 13: Storage](#feature-13-storage)
+    - [Feature 14: Date](#feature-14-date)
+    - [Feature 15: Edit](#feature-15-edit)
+    - [Feature 16: Remarks](#feature-16-remarks)
+    - [Feature 17: Log Workout Session](#feature-17-log-workout-session)
+    - [Feature 18: Log Exercise Stats](#feature-18-log-exercise-stats)
+    - [Feature 19: History Storage](#feature-19-history-storage)
 - [FAQ](#faq)
 - [Known Issues](#known-issues)
 - [Command Summary](#command-summary)
@@ -124,31 +128,29 @@ Output: Your exercise has been successfully deleted!
 
 ---
 
-### Feature 6: List Workout Sessions
+### Feature 6: List Workout Summary
 
-**Purpose:** Lists all the types of workout sessions.
+**Purpose:** Lists the names and completion status of all workout sessions currently in your list.
 
 **Format:**
 ```
-list /all
+list
 ```
 
 **Example:**
 ```
-Input:  list /all
-Output:
-  Push: Benchpress
-  Push: Tricep Kickbacks
-  Pull: Lat pulldown
-  Pull: Preacher curls
-  Legs: What is legs?
+Input:  list
+Output: 
+  Your Workouts:
+  1. [ ] PUSH DAY
+  2. [X] PULL DAY
 ```
 
 ---
 
 ### Feature 7: List Workout Exercises
 
-**Purpose:** Lists exercises within a workout session.
+**Purpose:** Lists all exercises within a specific workout session.
 
 **Format:**
 ```
@@ -159,15 +161,37 @@ list w/WORKOUT
 ```
 Input:  list w/push
 Output:
+  PUSH Workout Exercises:
   Bench Press | Weight: 80kg | Sets: 4 | Reps: 10
   ... remaining exercises ...
 ```
 
 ---
 
-### Feature 8: Find a Workout
+### Feature 8: List All Data
 
-**Purpose:** Helps you find the workout that you have logged.
+**Purpose:** Lists every exercise across every workout session stored in the application.
+
+**Format:**
+```
+list all
+```
+
+**Example:**
+```
+Input:  list all
+Output:
+  PUSH DAY:
+    Bench Press | Weight: 80kg | Sets: 4 | Reps: 10
+  PULL DAY:
+    Lat Pulldown | Weight: 60kg | Sets: 3 | Reps: 12
+```
+
+---
+
+### Feature 9: Find a Workout
+
+**Purpose:** Helps you find a specific workout session in your list.
 
 **Format:**
 ```
@@ -177,17 +201,14 @@ find w/WORKOUT
 **Example:**
 ```
 Input:  find w/push
-Output: Push | Exercise : 3
-
-Input:  find w/arms
-Output: Workout Not Found
+Output: Push | Exercises: 3
 ```
 
 ---
 
-### Feature 9: Find an Exercise
+### Feature 10: Find an Exercise
 
-**Purpose:** Helps you find the exercise that you have logged.
+**Purpose:** Helps you find a specific exercise across your workouts.
 
 **Format:**
 ```
@@ -203,7 +224,7 @@ Output:
 
 ---
 
-### Feature 10: Exit
+### Feature 11: Exit
 
 **Purpose:** Exits the program.
 
@@ -214,7 +235,7 @@ exit
 
 ---
 
-### Feature 11: Mark
+### Feature 12: Mark
 
 **Purpose:** Marks a workout as complete.
 
@@ -222,15 +243,13 @@ exit
 
 ---
 
-### Feature 12: Storage
+### Feature 13: Storage
 
 **Purpose:** Keeps a record of past workout sessions (to use as templates).
 
-
-
 ---
 
-### Feature 13: Date
+### Feature 14: Date
 
 **Purpose:** Assigns a date to each workout.
 
@@ -238,7 +257,7 @@ exit
 
 ---
 
-### Feature 14: Edit
+### Feature 15: Edit
 
 **Purpose:** Edits values in a workout or exercise.
 
@@ -246,11 +265,60 @@ exit
 
 ---
 
-### Feature 15: Remarks
+### Feature 16: Remarks
 
 **Purpose:** Adds comments and remarks to a workout session.
 
 *(Details TBC)*
+
+---
+
+### Feature 17: Log Workout Session
+
+**Purpose:** Starts or resumes a logging session for today. This command identifies the workout you are currently training and lists its exercises.
+
+**Format:**
+```
+log w/WORKOUT_NAME
+```
+
+**Example:**
+```
+Input:  log w/Push Day
+Output: Session started for Push Day! Let's get those gains.
+        PUSH DAY Workout Exercises:
+        ...
+```
+
+---
+
+### Feature 18: Log Exercise Stats
+
+**Purpose:** Records your actual performance (weight, sets, reps) and an optional remark for a specific exercise. GitSwole uses "Smart Overwriting" to ensure your history remains clean.
+
+**Format:**
+```
+log e/EXERCISE_NAME [w/WORKOUT_NAME] [wt/WEIGHT] [s/SETS] [r/REPS] [remark/REMARK]
+```
+
+* If `w/` is omitted, the most recent active session name is used (Sticky Session).
+* If `wt/`, `s/`, or `r/` are omitted, the current values stored in the workout template are used.
+
+**Example:**
+```
+Input:  log e/Bench Press wt/85 s/3 r/5 remark/Felt strong
+Output: Stats updated for Bench Press in Push Day!
+        Remark added: Felt strong
+```
+
+---
+
+### Feature 19: History Storage
+
+**Purpose:** Automatically records every `log` entry into a persistent history file (`docs/history.txt`). This file serves as a chronological diary of your training progress.
+
+**Format:**
+(Automatic upon using the `log` command)
 
 ---
 
@@ -274,11 +342,12 @@ exit
 | Add exercise | `add e/EXERCISE w/WORKOUT [wt/WEIGHT] [s/SET] [r/REPETITION]` | `add e/benchpress w/push wt/40 s/3 r/8` |
 | Delete workout | `delete w/WORKOUT` | `delete w/push` |
 | Delete exercise | `delete e/EXERCISE w/WORKOUT` | `delete e/benchpress w/push` |
-| List all workouts | `list /all` | `list /all` |
-| List workout exercises | `list w/WORKOUT` | `list w/push` |
+| List summary | `list` | `list` |
+| List specific workout | `list w/WORKOUT` | `list w/push` |
+| List all | `list all` | `list all` |
+| Log workout session | `log w/WORKOUT` | `log w/push day` |
+| Log exercise stats | `log e/EXERCISE [w/WORKOUT] [wt/WEIGHT] [s/SETS] [r/REPS] [remark/REMARK]` | `log e/bench press wt/80 s/3 r/10` |
 | Find workout | `find w/WORKOUT` | `find w/push` |
 | Find exercise | `find e/EXERCISE w/WORKOUT` | `find e/benchpress w/push` |
 | Help | `help` | `help` |
 | Exit program | `exit` | `exit` |
-| Mark workout | *(TBC)* | |
-| Store workout | *(TBC)* | |
