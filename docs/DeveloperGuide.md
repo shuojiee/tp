@@ -103,7 +103,7 @@ The following commands are currently recognised:
 > `Command` subclasses to reuse the same flag-parsing logic directly without re-instantiating
 > a `Parser`.
 
-<img src="diagrams/architecture/Parser/ParserComponent.png" width="500" />
+<img src="diagrams/architecture/Parser/ParserComponent.png" width="1171" />
 
 ---
 
@@ -135,7 +135,7 @@ The subclasses are:
 The `isExit()` method is defined in the base class and returns `false` for all commands
 except `ExitCommand`, which overrides it to return `true`.
 
-<img src="diagrams/architecture/Command/CommandComponent.png" width="962" />
+<img src="diagrams/architecture/Command/CommandComponent.png" width="1528" />
 
 ---
 
@@ -149,7 +149,7 @@ to and from plain text files on disk. It is split into two classes with distinct
 **`Storage.java`** manages the primary workout data file. It uses a structured
 pipe-delimited format:
 
-<img src="diagrams/architecture/Storage/StorageComponent.png" width="962" />
+<img src="diagrams/architecture/Storage/StorageComponent.png" width="950" />
 
 ## Implementation
 
@@ -256,12 +256,12 @@ with `WorkoutList` (to locate the target) and `Ui` (to drive an interactive prom
 **Edit Workout**
 > Only the workout name is changed.
 
-<img src="docs/diagrams/commands/edit/EditWorkout.png">
+<img src="diagrams/commands/edit/EditWorkout.png">
 
 **Edit Exercise**
 > The workout name, exercise name, weight, sets, and reps can all be modified.
 
-<img src="docs/diagrams/commands/edit/EditExercise.png">
+<img src="diagrams/commands/edit/EditExercise.png">
 
 #### Implementation
 
