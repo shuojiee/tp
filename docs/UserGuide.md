@@ -48,6 +48,19 @@ GitSwole provides fast, CLI-based workout tracking for gym-goers who dislike slo
 
 ---
 
+## Glossary
+
+| Term | Meaning |
+|------|---------|
+| **Workout Session** | A named training session that groups related exercises together (e.g. "Push Day", "Legs"). A workout session acts as a folder — you create it first, then add exercises into it. |
+| **Exercise** | A specific movement within a workout session (e.g. "Bench Press", "Deadlift"). Each exercise stores its own weight, sets, and reps. An exercise always belongs to exactly one workout session. |
+| **Log / Log Entry** | A timestamped record of your actual performance for an exercise during a particular session. Logs are saved to your history and can be reviewed later with `loglist`. |
+| **Remark** | A free-text note attached to a log entry (e.g. "Felt strong today", "Lower back tight"). |
+| **Template** | Your saved workout sessions and their exercises serve as reusable templates — the baseline plan you log against each time you train. |
+
+> **In short:** GitSwole uses a two-level hierarchy — **Workout Sessions** contain **Exercises**. When you train, you **log** your performance against that template, building a chronological history you can review anytime.
+ 
+---
 ## Features
 
 ### Feature 1: Help
@@ -266,31 +279,57 @@ Output: Successfully unmarked 'push'!
 > **Note:** Completion status is shown in `list` as `[X]` (done) or `[ ]` (not done).
 
 ---
-
 ### Feature 13: Storage
 
-**Purpose:** Keeps a record of past workout sessions (to use as templates).
+**Purpose:** Automatically persists your workout templates and training history to disk so that your data is preserved between sessions.
 
+**How it works:**
+
+GitSwole maintains two data files, both created automatically on first run:
+
+| File | Contents |
+|------|----------|
+| `data/workouts.txt` | Workout templates (sessions, exercises, weights, sets, reps, completion status) |
+| `data/history.txt` | Chronological training log entries created by the `log` command |
+
+Saving is fully automatic — every mutating command (`add`, `delete`, `edit`, `mark`, `log`) writes changes to disk immediately. There is no manual "save" command. On the next launch, GitSwole reloads your data from these files.
+
+> **Note:** The `|` character is used internally as a field delimiter. If your workout or exercise names contain ` | `, it will be escaped automatically, but it is best to avoid this character in names to prevent confusion when reading the raw file.
+
+> **Note:** You may edit `data/workouts.txt` or `data/history.txt` by hand, but malformed entries may cause loading errors. Always keep a backup before manual edits.
+ 
 ---
 
 ### Feature 14: Date
 
-**Purpose:** Assigns a date to each workout.
+**Purpose:** Automatically timestamps every training session so you can track when each workout was performed.
 
-**Format:**
+**How it works:**
 
+When you start a logging session with `log w/WORKOUT_NAME`, GitSwole captures the current date and time automatically — you do not need to enter a date manually. The timestamp is recorded in `dd-MM-yyyy, HH:mm` format and stored in your history file.
+
+**Example:**
 ```
-Input:  loglist
-Output: === COMPLETE LOG HISTORY ===
-        [24-03-2026, 23:09] LEGS workout
-        deadlift:         :  100kg |  4 sets | 10 reps
-        leg press:        :  140kg |  3 sets | 10 reps
-        hamstring curl:   :  110kg |  4 sets |  8 reps
-        --------------------------------------------
-        [30-03-2026, 14:15] LEGS workout
-        deadlift:         :  100kg |  4 sets | 10 reps
-        leg press:        :  140kg |  3 sets | 10 reps
+Input:  log w/legs
+Output: Session started for Legs! Let's get those gains.
 ```
+
+The history file will contain an entry like:
+```
+[01-04-2026, 18:30] LEGS workout
+```
+
+To review sessions by date, use the `loglist d/DATE` command (see [Feature 20: Log List](#feature-20-log-list)):
+```
+Input:  loglist d/01-04-2026
+Output:
+=== LOG HISTORY FOR: 01-04-2026 ===
+[01-04-2026, 18:30] LEGS workout
+deadlift:         :  100kg |  4 sets | 10 reps
+...
+```
+
+> **Note:** GitSwole uses your system clock. Make sure your computer's date and time are set correctly.
 ---
 
 ### Feature 15: Edit
@@ -480,7 +519,6 @@ A: GitSwole will display an error message. Type `help` to see the list of valid 
 ---
 
 ## Command Summary
-
 | Action | Format | Example |
 |--------|--------|---------|
 | Add workout | `add w/WORKOUT` | `add w/push` |
@@ -490,8 +528,14 @@ A: GitSwole will display an error message. Type `help` to see the list of valid 
 | List summary | `list` | `list` |
 | List specific workout | `list w/WORKOUT` | `list w/push` |
 | List all | `list all` | `list all` |
+| Mark workout | `mark w/WORKOUT` | `mark w/push` |
+| Unmark workout | `unmark w/WORKOUT` | `unmark w/push` |
 | Log workout session | `log w/WORKOUT` | `log w/push day` |
 | Log exercise stats | `log e/EXERCISE [w/WORKOUT] [wt/WEIGHT] [s/SETS] [r/REPS] [remark/REMARK]` | `log e/bench press wt/80 s/3 r/10` |
+| Add remark | `log e/EXERCISE [w/WORKOUT] remark/REMARK` | `log e/bench press w/push remark/Felt strong` |
+| View full log history | `loglist` | `loglist` |
+| View log by workout | `loglist w/WORKOUT` | `loglist w/legs` |
+| View log by date | `loglist d/DATE` | `loglist d/30-03-2026` |
 | Find workout | `find w/WORKOUT` | `find w/push` |
 | Find exercise | `find e/EXERCISE w/WORKOUT` | `find e/benchpress w/push` |
 | Edit workout name | `edit w/WORKOUT` | `edit w/push` |
