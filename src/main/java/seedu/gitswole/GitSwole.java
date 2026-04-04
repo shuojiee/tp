@@ -27,6 +27,15 @@ public class GitSwole {
     private static Storage storage = new Storage(STORAGE_FILE_PATH);
 
     /**
+     * Constructs a GitSwole instance.
+     * Re-initializes the static UI and workout list (primarily for testing).
+     */
+    public GitSwole() {
+        ui = new Ui();
+        workouts = loadWorkoutsStatic();
+    }
+
+    /**
      * Attempts to load workouts from the storage file on startup.
      * If the file does not exist yet (first run), returns an empty WorkoutList silently.
      * If the file is corrupted, warns the user and starts with an empty WorkoutList.
@@ -121,7 +130,7 @@ public class GitSwole {
         setupLogger();
         logger.log(Level.INFO, "GitSwole application starting...");
 
-        workouts = loadWorkoutsStatic();
+        new GitSwole();
         run();
 
         logger.log(Level.INFO, "GitSwole application terminated.");
