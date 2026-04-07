@@ -40,17 +40,18 @@
 ## Setup Guide
 ### Steps
 1. Clone the repository to your local machine:
-   ```bash
+    ```bash
    git clone https://github.com/AY2526S2-CS2113-W10-3/tp
-   ```
+    ```
 2. Navigate into the project directory:
-   ```bash
+    ```bash
    cd tp
-   ```
+    ```
 3. Run the application using Gradle:
-   ```bash
+    ```bash
    ./gradlew run
     ```
+
 ## Design
 
 The **Architecture Diagram** below gives a high-level design overview of GitSwole.
