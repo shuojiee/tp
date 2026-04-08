@@ -108,7 +108,6 @@ It exposes the following key operations:
 <img src="diagrams/architecture/Ui/UiComponent.png" width="573" />
 
 ---
-
 ### Parser Component
 
 **API:** `Parser.java`
@@ -118,27 +117,16 @@ correct `Command` subclass. It uses an internal `HashMap<String, CommandType>` t
 O(1) keyword lookups, avoiding long if-else chains.
 
 It exposes the following key operations:
-- `readResponse(String, WorkoutList)` - the main entry point; parses the full input string
+- `readResponse(String, WorkoutList)` — the main entry point; parses the full input string
   and returns a ready-to-execute `Command` object.
-- `parseValue(String, String)` *(static)* - extracts the value of a named flag
+- `parseValue(String, String)` *(static)* — extracts the value of a named flag
   (e.g. `w/`, `e/`, `wt/`) from the input string using regex boundary detection.
-- `parseOptionalInt(String, String, int)` *(static)* - extracts an optional integer flag
+- `parseOptionalInt(String, String, int)` *(static)* — extracts an optional integer flag
   value, returning a default if the flag is absent or malformed.
 
-The following commands are currently recognised:
-
-| Keyword | Maps to |
-|---|---|
-| `add` | `AddCommand` |
-| `delete` | `DeleteCommand` |
-| `edit` | `EditCommand` |
-| `find` | `FindCommand` |
-| `list` | `ListCommand` |
-| `mark` / `unmark` | `MarkCommand` |
-| `log` | `LogCommand` |
-| `loglist` | `LogListCommand` |
-| `help` | `HelpCommand` |
-| `exit` | `ExitCommand` |
+`Parser` resolves each recognised keyword to its corresponding `Command` subclass — the
+full keyword-to-command mapping is documented in the [Command Component](#command-component)
+below.
 
 > **Note:** `parseValue` and `parseOptionalInt` are `public static` methods, allowing
 > `Command` subclasses to reuse the same flag-parsing logic directly without re-instantiating
@@ -160,18 +148,20 @@ public abstract void execute(WorkoutList workouts, Ui ui) throws GitSwoleExcepti
 ```
 
 Each concrete subclass encapsulates the full logic for exactly one user-facing operation.
-The subclasses are:
+`Parser` resolves user input keywords to these subclasses as follows:
 
-- `AddCommand` - adds a new `Workout` or `Exercise` to the `WorkoutList`.
-- `DeleteCommand` - removes a `Workout` or `Exercise` by index.
-- `EditCommand` - modifies the name of an existing `Workout` or `Exercise`.
-- `FindCommand` - searches for workouts by keyword.
-- `ListCommand` - lists workouts at summary, workout-specific, or full-detail scope.
-- `MarkCommand` - marks or unmarks a `Workout` as done.
-- `LogCommand` - initialises a workout logging session or logs an individual exercise stat.
-- `LogListCommand` - displays the full workout history from `HistoryStorage`.
-- `HelpCommand` - displays all available commands and their formats.
-- `ExitCommand` - sets `isExit = true` to signal the main loop to terminate.
+| Keyword | Command Subclass | Responsibility |
+|---|---|---|
+| `add` | `AddCommand` | Adds a new `Workout` or `Exercise` to the `WorkoutList` |
+| `delete` | `DeleteCommand` | Removes a `Workout` or `Exercise` by index |
+| `edit` | `EditCommand` | Modifies the name or fields of an existing `Workout` or `Exercise` |
+| `find` | `FindCommand` | Searches for workouts by keyword |
+| `list` | `ListCommand` | Lists workouts at summary, workout-specific, or full-detail scope |
+| `mark` / `unmark` | `MarkCommand` | Marks or unmarks a `Workout` as done |
+| `log` | `LogCommand` | Initialises a logging session or logs an individual exercise stat |
+| `loglist` | `LogListCommand` | Displays the full workout history from `HistoryStorage` |
+| `help` | `HelpCommand` | Displays all available commands and their formats |
+| `exit` | `ExitCommand` | Sets `isExit = true` to signal the main loop to terminate |
 
 The `isExit()` method is defined in the base class and returns `false` for all commands
 except `ExitCommand`, which overrides it to return `true`.
