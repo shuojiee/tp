@@ -26,12 +26,6 @@
 8. [Glossary](#glossary)
 9. [Instructions for Manual Testing](#instructions-for-manual-testing)
 
-10. [Non-Functional Requirements](#non-functional-requirements)
-
-11. [Glossary](#glossary)
-
-12. [Instructions for Manual Testing](#instructions-for-manual-testing)
-13. 
 ## Acknowledgements
 
 * [JUnit 5](https://junit.org/junit5/) - Used for unit testing across all components.
@@ -43,19 +37,20 @@
 ## Setup Guide
 
 ### Prerequisites
-* **Java 11** or above — verify with `java -version`
-* **Gradle 7.6+** — the project ships with the Gradle wrapper (`gradlew`), so a
+* **JDK 17** (use the exact version) — verify with `java -version`
+* **IntelliJ IDEA** (update to the most recent version)
+* **Gradle** — the project ships with the Gradle wrapper (`gradlew`), so a
   separate Gradle installation is not required
 
 ### Getting the Source Code
 1. Fork the repository on GitHub if you intend to contribute.
 2. Clone your fork to your local machine:
 ```bash
-   git clone https://github.com/AY2526S2-CS2113-W10-3/tp
+git clone https://github.com/AY2526S2-CS2113-W10-3/tp
 ```
 3. Navigate into the project directory:
 ```bash
-   cd tp
+cd tp
 ```
 
 ### Setting Up the IDE (IntelliJ IDEA — Recommended)
