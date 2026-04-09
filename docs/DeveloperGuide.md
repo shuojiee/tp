@@ -35,7 +35,7 @@
 * [AddressBook-Level3](https://se-education.org/addressbook-level3/) - Project structure, N-tier architecture design, and specific `Parser` command-handling patterns were heavily inspired by and adapted from the se-edu initiative.
 * [TA ASCII Art Generator](https://patorjk.com/software/taag/) - Used to generate the GitSwole terminal startup logo.
 * [Baeldung: Java FileWriter](https://www.baeldung.com/java-write-to-file) - Adapted code snippets from this guide for our `HistoryStorage` smart-overwriting logic.
-* [StackOverflow - "Regex for parsing flags"](https://stackoverflow.com/questions/...) - Adapted the regex boundary detection logic used in `Parser.parseValue()`.
+
 ## Setup Guide
 
 ### Prerequisites
@@ -58,7 +58,7 @@ cd tp
 ### Setting Up the IDE (IntelliJ IDEA — Recommended)
 1. Open IntelliJ IDEA and choose **Open**, then select the root `tp/` folder.
 2. If prompted, select **Import Gradle Project** and let IntelliJ resolve dependencies.
-3. Ensure the Project SDK is set to **Java 11**:
+3. Ensure **IntelliJ JDK 17 is defined as an SDK**, as described [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk) — this step is not needed if you have used JDK 17 in a previous IntelliJ project:
    `File → Project Structure → Project → SDK`
 4. Enable annotation processing:
    `Settings → Build, Execution, Deployment → Compiler → Annotation Processors → Enable`
@@ -131,6 +131,7 @@ It exposes the following key operations:
 <img src="diagrams/architecture/Ui/UiComponent.png" width="573" />
 
 ---
+
 ### Parser Component
 
 **API:** `Parser.java`
@@ -337,7 +338,7 @@ The edit feature allows users to rename an existing workout or modify the detail
 a specific exercise within a workout. It is facilitated by `EditCommand`, which interacts
 with `WorkoutList` (to locate the target) and `Ui` (to drive an interactive prompt for new values).
 
-#### *How does it work?*
+#### How it works
 
 **Edit Workout**
 > Only the workout name is changed.
@@ -360,7 +361,7 @@ Output: Change Recorded! Edited Workout:
         Push Day
         Bench Press | Weight: 90kg | Sets: 4 | Reps: 8
 ```
-#### Implementation
+#### Architecture and Component Level Design
 
 `EditCommand` extends `Command` and routes execution to one of two private handlers based
 on the presence of the `e/` flag in the raw input string:
@@ -413,7 +414,7 @@ no changes were recorded.
       (e.g: `wn/push en/bench wt/100 s/3 r/10`)
 
 
-**Sequence Diagram:**  
+#### Sequence Diagram
 **Overview:**  
 <img src="diagrams/commands/edit/EditCommand.png" width="300"/>
 
@@ -691,7 +692,7 @@ GitSwole enables fitness-focused CLI users to manage, log, and track workouts en
 
 ## Non-Functional Requirements
 
-* **Environment**: Should work on any mainstream OS (Windows, Linux, macOS) as long as Java 11 or above is installed.
+* **Environment**: Should work on any mainstream OS (Windows, Linux, macOS) as long as JDK 17 or above is installed.
 * **Performance**: The system should respond to user inputs within 100ms to ensure a seamless typing experience.
 * **Data Integrity**: Data should be saved automatically to a local text file after every mutating command (add, delete, mark)
 to prevent data loss during unexpected closures.
