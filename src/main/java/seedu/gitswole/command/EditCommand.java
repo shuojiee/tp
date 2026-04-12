@@ -46,6 +46,9 @@ public class EditCommand extends Command{
     @Override
     public void execute(WorkoutList workouts, Ui ui) throws GitSwoleException {
         assert response != null : "Response cannot be null";
+
+        Parser.validateNoUnknownFlags(response, "w/", "e/");
+
         if (response.contains(" e/")) {
             handleEditExercise(workouts, ui);
         } else {

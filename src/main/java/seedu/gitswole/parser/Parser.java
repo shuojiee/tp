@@ -17,7 +17,10 @@ import seedu.gitswole.command.Command;
 import seedu.gitswole.exceptions.GitSwoleException;
 import seedu.gitswole.ui.Ui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -147,6 +150,46 @@ public class Parser {
         return type;
     }
     // @@author
+
+    /**
+     * Validates that the input string does not contain any unrecognized flags.
+     * A flag is defined as any word ending with a '/'.
+     *
+     * @param input         The full command string to check.
+     * @param recognizedFlags A list of flags that are allowed for this command (e.g., "w/", "e/").
+     * @throws GitSwoleException If any unknown flags are detected.
+     */
+    public static void validateNoUnknownFlags(String input, String... recognizedFlags) throws GitSwoleException {
+        if (input == null || input.isBlank()) {
+            return;
+        }
+
+        String[] words = input.split("\\s+");
+        ArrayList<String> unknownFlags = new ArrayList<>();
+        List<String> allowed = Arrays.asList(recognizedFlags);
+
+        // Skip the first word as it is the command name (e.g., "log")
+        for (int i = 1; i < words.length; i++) {
+            String word = words[i];
+            if (word.contains("/")) {
+                // Check if this word (or the part ending in /) is a flag
+                int slashIdx = word.indexOf('/');
+                String potentialFlag = word.substring(0, slashIdx + 1);
+
+                if (!allowed.contains(potentialFlag) && !potentialFlag.equals("remark/")) {
+                    unknownFlags.add("\"" + potentialFlag + "\"");
+                }
+            }
+        }
+
+        if (!unknownFlags.isEmpty()) {
+            String flagLabel = unknownFlags.size() > 1 ? "flags" : "flag";
+            String joinedFlags = String.join(", ", unknownFlags);
+            throw new GitSwoleException(GitSwoleException.ErrorType.DEFAULT,
+                    "I don't recognise the " + flagLabel + " " + joinedFlags + 
+                    ". Please check your spelling and try again!");
+        }
+    }
 
     /**
      * Extracts the value associated with a flag in the user's input string.

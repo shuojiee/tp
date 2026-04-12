@@ -65,6 +65,8 @@ public class LogCommand extends Command {
         assert workouts != null : "WorkoutList must be initialized";
         assert ui != null : "Ui must be initialized";
 
+        Parser.validateNoUnknownFlags(response, "e/", "w/", "wt/", "s/", "r/");
+
         if (response.contains(" e/")) {
             handleLogExercise(workouts, ui);
         } else {

@@ -261,11 +261,19 @@ class ParserTest {
     }
 
     @Test
-    @DisplayName("parseValue handles out-of-order flags and remark/ correctly")
-    void parseValue_outOfOrderWithRemark() {
-        String input = "log remark/Lightweight babyyy w/Push Day e/Bench Press";
-        assertEquals("Push Day", Parser.parseValue(input, "w/"));
-        assertEquals("Bench Press", Parser.parseValue(input, "e/"));
+    @DisplayName("validateNoUnknownFlags throws exception for unknown flags")
+    void validateNoUnknownFlags_unknownFlags_throws() {
+        String input = "log e/bench wol/1001 praveen/";
+        GitSwoleException ex = assertThrows(GitSwoleException.class, 
+            () -> Parser.validateNoUnknownFlags(input, "e/", "w/"));
+        assertEquals("I don't recognise the flags \"wol/\", \"praveen/\". Please check your spelling and try again!", 
+            ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("validateNoUnknownFlags passes for valid flags")
+    void validateNoUnknownFlags_validFlags_passes() throws GitSwoleException {
+        Parser.validateNoUnknownFlags("log e/bench w/push remark/good", "e/", "w/");
     }
 }
 //@@author

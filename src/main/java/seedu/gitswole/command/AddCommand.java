@@ -46,6 +46,9 @@ public class AddCommand extends Command {
     public void execute(WorkoutList workouts, Ui ui) throws GitSwoleException {
         assert workouts != null : "WorkoutList should not be null";
         assert ui != null : "Ui should not be null";
+
+        Parser.validateNoUnknownFlags(response, "w/", "e/", "wt/", "s/", "r/");
+
         if (response.contains(" e/")) {
             handleAddExercise(workouts, ui);
         } else {
