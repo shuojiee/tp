@@ -193,4 +193,45 @@ public class MarkCommandTest {
         new MarkCommand("mark w/push").execute(workouts, ui);
         assertTrue(workouts.getWorkoutByName("push").isDone());
     }
+
+    @Test
+    @DisplayName("mark w/INDEX — marks workout at valid index as done")
+    void markWorkout_byValidIndex_marksAsDone() throws GitSwoleException {
+        Workout push = new Workout("push");
+        push.addExercise(new Exercise("bench", 0, 0, 0));
+        workouts.addWorkout(push);
+        new MarkCommand("mark w/1").execute(workouts, ui);
+        assertTrue(workouts.getWorkoutByName("push").isDone());
+    }
+
+    @Test
+    @DisplayName("unmark w/INDEX — unmarks workout at valid index")
+    void unmarkWorkout_byValidIndex_unmarksWorkout() throws GitSwoleException {
+        Workout push = new Workout("push");
+        push.addExercise(new Exercise("bench", 0, 0, 0));
+        push.markDone(true);
+        workouts.addWorkout(push);
+        new MarkCommand("unmark w/1").execute(workouts, ui);
+        assertTrue(!workouts.getWorkoutByName("push").isDone());
+    }
+
+    @Test
+    @DisplayName("mark w/INDEX — out of bounds index throws IDX_OUTOFBOUNDS")
+    void markWorkout_byOutOfBoundsIndex_throwsException() {
+        Workout push = new Workout("push");
+        push.addExercise(new Exercise("bench", 0, 0, 0));
+        workouts.addWorkout(push);
+        assertThrows(GitSwoleException.class,
+                () -> new MarkCommand("mark w/99").execute(workouts, ui));
+    }
+
+    @Test
+    @DisplayName("mark w/INDEX — index 0 is invalid, throws exception")
+    void markWorkout_byZeroIndex_throwsException() {
+        Workout push = new Workout("push");
+        push.addExercise(new Exercise("bench", 0, 0, 0));
+        workouts.addWorkout(push);
+        assertThrows(GitSwoleException.class,
+                () -> new MarkCommand("mark w/0").execute(workouts, ui));
+    }
 }

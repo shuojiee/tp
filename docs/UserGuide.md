@@ -165,11 +165,13 @@ Output: Your exercise has been successfully added! Looking swole g
 **Format:**
 ```
 delete w/WORKOUT
+delete w/INDEX
 ```
 
 **Example:**
 ```
 Input:  delete w/push
+        delete w/2
 Output: Successfully deleted a Push Session!
 ```
 
@@ -182,11 +184,13 @@ Output: Successfully deleted a Push Session!
 **Format:**
 ```
 delete e/EXERCISE w/WORKOUT [wt/WEIGHT] [s/SET] [r/REPETITION]
+delete e/INDEX w/WORKOUT
 ```
 
 **Example:**
 ```
 Input:  delete e/benchpress w/push
+        delete e/2 w/push
         delete e/benchpress w/push wt/40 s/3 r/8
 Output: Your exercise has been successfully deleted!
 ```
@@ -306,15 +310,19 @@ exit
 **Format:**
 ```
 mark w/WORKOUT
+mark w/INDEX
 unmark w/WORKOUT
+unmark w/INDEX
 ```
 
 **Example:**
 ```
 Input:  mark w/push
+        mark w/2
 Output: Successfully marked 'push' as done!
 
 Input:  unmark w/push
+        unmark w/2
 Output: Successfully unmarked 'push'!
 ```
 

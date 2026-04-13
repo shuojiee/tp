@@ -143,6 +143,33 @@ public class WorkoutList {
     }
 
     /**
+     * Returns the workout at the specified 1-based index.
+     *
+     * @param index The 1-based index of the workout.
+     * @return The {@link Workout} at that position, or {@code null} if out of bounds.
+     */
+    public Workout getWorkoutByIndex(int index) {
+        if (index < 1 || index > workouts.size()) {
+            return null;
+        }
+        return workouts.get(index - 1);
+    }
+
+    /**
+     * Removes the workout at the specified 1-based index.
+     *
+     * @param index The 1-based index of the workout to remove.
+     * @return {@code true} if removed, {@code false} if index is out of bounds.
+     */
+    public boolean removeWorkoutByIndex(int index) {
+        if (index < 1 || index > workouts.size()) {
+            return false;
+        }
+        workouts.remove(index - 1);
+        return true;
+    }
+
+    /**
      * Returns the number of workouts in the list that are marked as done.
      *
      * @return The count of completed workouts.
