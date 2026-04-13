@@ -56,35 +56,38 @@ public class DeleteCommand extends Command {
      * @param workouts The current list of workouts.
      */
     private void deleteWorkout(WorkoutList workouts, Ui ui) {
-        int wIndex = arguments.indexOf("w/");
+        String workoutName = Parser.parseValue(arguments, "w/");
 
-        // This method is only called if arguments.contains("w/") was true, so wIndex MUST NOT be -1
-        assert wIndex != -1 : "wIndex should not be -1 because execute() confirmed 'w/' exists";
-
-        // Extract the workout name by taking everything after "w/"
-        String workoutName = arguments.substring(wIndex + 2).trim();
-
-        if (workoutName.isEmpty()) {
+        if (workoutName == null || workoutName.isEmpty()) {
             LOGGER.log(Level.WARNING, "DeleteWorkout failed: Workout name is empty.");
-            ui.showMessage("Please specify the workout name. Usage: delete w/WORKOUT");
-            ui.showMessage("________________________________________________________________________________" +
-                    "____________________");
+            ui.showMessage("Please specify the workout name or index. Usage: delete w/WORKOUT or delete w/INDEX");
+            ui.showLine();
             return;
         }
 
-        boolean isDeleted = workouts.removeWorkout(workoutName);
+        boolean isDeleted = false;
+        String deletedName = workoutName;
+
+        // Try index-based deletion first
+        try {
+            int index = Integer.parseInt(workoutName.trim());
+            seedu.gitswole.assets.Workout target = workouts.getWorkoutByIndex(index);
+            if (target != null) {
+                deletedName = target.getWorkoutName();
+            }
+            isDeleted = workouts.removeWorkoutByIndex(index);
+        } catch (NumberFormatException e) {
+            // Not an index — fall through to name-based deletion
+            isDeleted = workouts.removeWorkout(workoutName);
+        }
 
         if (isDeleted) {
-            String formattedName = workoutName.substring(0, 1).toUpperCase() + workoutName.substring(1);
+            String formattedName = deletedName.substring(0, 1).toUpperCase() + deletedName.substring(1);
             ui.showMessage("Successfully deleted the " + formattedName + " session!");
-            ui.showMessage("________________________________________________________________________________" +
-                    "____________________");
         } else {
-            // Print out the warning gracefully instead of throwing an exception to satisfy the test
-            ui.showMessage("'" + workoutName + "' not found. Please check your spelling.");
-            ui.showMessage("________________________________________________________________________________" +
-                    "____________________");
+            ui.showMessage("'" + workoutName + "' not found. Please check your spelling or index.");
         }
+        ui.showLine();
     }
 
     /**
@@ -93,36 +96,50 @@ public class DeleteCommand extends Command {
      * @param workouts The current list of workouts.
      */
     private void deleteExercise(WorkoutList workouts, Ui ui) {
-        // Use Parser to safely isolate the names and ignore trailing stat flags
-        String exerciseName = Parser.parseValue(arguments, "e/");
+        String exerciseValue = Parser.parseValue(arguments, "e/");
         String workoutName = Parser.parseValue(arguments, "w/");
 
-        if (exerciseName == null || workoutName == null) {
+        if (exerciseValue == null || workoutName == null
+                || exerciseValue.isEmpty() || workoutName.isEmpty()) {
             LOGGER.log(Level.WARNING, "DeleteExercise failed: Missing e/ or w/ flags.");
-            ui.showMessage("Invalid format! Please use: delete e/EXERCISE w/WORKOUT");
+            ui.showMessage("Invalid format! Please use: delete e/EXERCISE w/WORKOUT"
+                    + " or delete e/INDEX w/WORKOUT");
+            ui.showLine();
             return;
         }
 
-        if (exerciseName.isEmpty() || workoutName.isEmpty()) {
-            LOGGER.log(Level.WARNING, "DeleteExercise failed: Empty exercise ({0}) or workout ({1}) name.",
-                    new Object[]{exerciseName, workoutName});
-            ui.showMessage("Exercise or Workout name cannot be empty. Usage: delete e/EXERCISE w/WORKOUT");
-            ui.showMessage("________________________________________________________________________________" +
-                    "____________________");
+        // Resolve workout by name (index not supported for w/ in exercise deletion
+        // since w/ always refers to the parent workout by name)
+        seedu.gitswole.assets.Workout targetWorkout = workouts.getWorkoutByName(workoutName);
+        if (targetWorkout == null) {
+            ui.showMessage("Workout '" + workoutName + "' not found. Please check your spelling.");
+            ui.showLine();
             return;
         }
 
-        boolean isDeleted = workouts.removeExercise(workoutName, exerciseName);
+        boolean isDeleted = false;
+        String deletedName = exerciseValue;
+
+        // Try index-based deletion for exercise
+        try {
+            int index = Integer.parseInt(exerciseValue.trim());
+            java.util.ArrayList<seedu.gitswole.assets.Exercise> exercises = targetWorkout.getExerciseList();
+            if (index >= 1 && index <= exercises.size()) {
+                deletedName = exercises.get(index - 1).getExerciseName();
+                exercises.remove(index - 1);
+                isDeleted = true;
+            }
+        } catch (NumberFormatException e) {
+            // Not an index — fall through to name-based deletion
+            isDeleted = workouts.removeExercise(workoutName, exerciseValue);
+        }
 
         if (isDeleted) {
-            ui.showMessage("Successfully deleted '" + exerciseName + "' from '" + workoutName + "'!");
-            ui.showMessage("________________________________________________________________________________" +
-                    "____________________");
+            ui.showMessage("Successfully deleted '" + deletedName + "' from '" + workoutName + "'!");
         } else {
-            ui.showMessage("'" + exerciseName + "' or workout '" + workoutName
-                    + "' not found. Please check your spelling.");
-            ui.showMessage("________________________________________________________________________________" +
-                    "____________________");
+            ui.showMessage("'" + exerciseValue + "' not found in '" + workoutName
+                    + "'. Please check your spelling or index.");
         }
+        ui.showLine();
     }
 }

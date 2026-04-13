@@ -165,11 +165,13 @@ Output: Your exercise has been successfully added! Looking swole g
 **Format:**
 ```
 delete w/WORKOUT
+delete w/INDEX
 ```
 
 **Example:**
 ```
 Input:  delete w/push
+        delete w/2
 Output: Successfully deleted a Push Session!
 ```
 
@@ -182,11 +184,13 @@ Output: Successfully deleted a Push Session!
 **Format:**
 ```
 delete e/EXERCISE w/WORKOUT [wt/WEIGHT] [s/SET] [r/REPETITION]
+delete e/INDEX w/WORKOUT
 ```
 
 **Example:**
 ```
 Input:  delete e/benchpress w/push
+        delete e/2 w/push
         delete e/benchpress w/push wt/40 s/3 r/8
 Output: Your exercise has been successfully deleted!
 ```
@@ -306,20 +310,30 @@ exit
 **Format:**
 ```
 mark w/WORKOUT
+mark w/INDEX
 unmark w/WORKOUT
+unmark w/INDEX
 ```
 
 **Example:**
 ```
 Input:  mark w/push
+        mark w/2
 Output: Successfully marked 'push' as done!
 
 Input:  unmark w/push
+        unmark w/2
 Output: Successfully unmarked 'push'!
 ```
 
 > **Note:** Completion status is shown in `list` as `[X]` (done) or `[ ]` (not done).
-
+> 
+> `mark` and `log` serve different purposes and are intentionally kept separate.
+> `log w/WORKOUT` starts a session and records performance data — it does not automatically
+> mark the workout as done, since users may log exercises mid-session or plan ahead for future
+> sessions. Use `mark w/WORKOUT` explicitly when you consider a workout fully completed.
+> This gives you full control over your weekly completion checklist independently of your
+> training log history.
 ---
 ### Feature 13: Storage
 

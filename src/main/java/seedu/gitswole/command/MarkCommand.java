@@ -61,17 +61,39 @@ public class MarkCommand extends Command {
             throw new GitSwoleException(GitSwoleException.ErrorType.INCOMPLETE_COMMAND, parts[0]);
         }
 
-        Workout target = workouts.getWorkoutByName(workoutName);
-        if (target == null) {
-            LOGGER.log(Level.WARNING, "Workout ''{0}'' not found.", workoutName);
-            throw new GitSwoleException(GitSwoleException.ErrorType.NOT_FOUND, workoutName);
+        Workout target;
+        try {
+            int index = Integer.parseInt(workoutName.trim());
+            target = workouts.getWorkoutByIndex(index);
+            if (target == null) {
+                throw new GitSwoleException(GitSwoleException.ErrorType.IDX_OUTOFBOUNDS,
+                        "No workout at index " + index + ". Use 'list' to see valid indices.");
+            }
+            workoutName = target.getWorkoutName();
+        } catch (NumberFormatException e) {
+            target = workouts.getWorkoutByName(workoutName);
+            if (target == null) {
+                LOGGER.log(Level.WARNING, "Workout ''{0}'' not found.", workoutName);
+                throw new GitSwoleException(GitSwoleException.ErrorType.NOT_FOUND, workoutName);
+            }
         }
-        assert target != null : "Target workout must not be null after null check";
 
         if (isDone && target.getNumOfExercises() == 0) {
             LOGGER.log(Level.WARNING, "MarkCommand failed: Workout ''{0}'' has no exercises.", workoutName);
             throw new GitSwoleException(GitSwoleException.ErrorType.DEFAULT,
                     "Cannot mark \"" + target.getWorkoutName() + "\" as done because it has no exercises!");
+        }
+
+        if (isDone && target.isDone()) {
+            ui.showMessage("'" + workoutName + "' is already marked as done!");
+            ui.showLine();
+            return;
+        }
+
+        if (!isDone && !target.isDone()) {
+            ui.showMessage("'" + workoutName + "' is already unmarked!");
+            ui.showLine();
+            return;
         }
 
         target.markDone(isDone);
